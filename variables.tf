@@ -10,5 +10,5 @@ variable "region" {
 variable "cluster_name" {
   description = "AWS EKS cluster name"
   type        = string
-  default     = "argoworkflows-test-eks"
+  default     = "argoworkflows-oss-eks"
 }
