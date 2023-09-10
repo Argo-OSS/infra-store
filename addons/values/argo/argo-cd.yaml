@@ -1,0 +1,202 @@
+nameOverride: argocd
+
+installCRDs: true
+
+# controller:
+  # resources:
+  #  limits:
+  #    cpu: 1000m
+  #    memory: 1Gi
+  #  requests:
+  #    cpu: 500m
+  #    memory: 512Mi
+
+  # metrics:
+  #   enabled: true
+  #   serviceMonitor:
+  #     enabled: false
+  #     additionalLabels:
+  #       release: prometheus-operator
+
+  # tolerations:
+  #   - key: group
+  #     operator: Equal
+  #     value: operation
+  #     effect: NoSchedule
+
+  # affinity:
+  #   nodeAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #       nodeSelectorTerms:
+  #         - matchExpressions:
+  #             - key: group
+  #               operator: In
+  #               values:
+  #                 - operation
+
+server:
+  replicas: 1
+
+  # autoscaling:
+  #   enabled: true
+    # minReplicas: 2
+
+  # resources:
+  #  limits:
+  #    cpu: 100m
+  #    memory: 256Mi
+  #  requests:
+  #    cpu: 50m
+  #    memory: 128Mi
+
+  extraArgs:
+    - --insecure
+
+  # metrics:
+  #   enabled: true
+  #   serviceMonitor:
+  #     enabled: false
+  #     additionalLabels:
+  #       release: prometheus-operator
+
+  # tolerations:
+  #   - key: group
+  #     operator: Equal
+  #     value: operation
+  #     effect: NoSchedule
+
+  # affinity:
+  #   nodeAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #       nodeSelectorTerms:
+  #         - matchExpressions:
+  #             - key: group
+  #               operator: In
+  #               values:
+  #                 - operation
+
+  config:
+    repositories: |
+      - name: argo-workflows-oss-playground
+        url: git@github.com:ArgoWorkflows-OSS/container-playground.git
+        sshPrivateKeySecret:
+          name: github-secret
+          key: sshPrivateKey
+
+  # https://argoproj.github.io/argo-cd/operator-manual/rbac/
+  rbacConfig:
+    policy.default: role:readonly
+    policy.csv: |
+      p, role:org-admin, accounts, *, */*, allow
+      p, role:org-admin, applications, *, */*, allow
+      p, role:org-admin, clusters, *, *, allow
+      p, role:org-admin, projects, *, *, allow
+      p, role:org-admin, repositories, *, *, allow
+      p, role:org-deploy, applications, *, */*, allow
+      g, ArgoWorkflows-OSS:etc, role:org-deploy
+      g, ArgoWorkflows-OSS:abc, role:org-deploy
+      g, ArgoWorkflows-OSS:abcd, role:org-admin
+
+  additionalApplications: []
+
+  additionalProjects: []
+
+# repoServer:
+#   replicas: 1
+
+  # autoscaling:
+  #   enabled: true
+  #   minReplicas: 2
+
+  # resources:
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 250m
+  #    memory: 256Mi
+
+  # metrics:
+  #   enabled: true
+  #   serviceMonitor:
+  #     enabled: false
+  #     additionalLabels:
+  #       release: prometheus-operator
+
+  # tolerations:
+  #   - key: group
+  #     operator: Equal
+  #     value: operation
+  #     effect: NoSchedule
+
+  # affinity:
+  #   nodeAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #       nodeSelectorTerms:
+  #         - matchExpressions:
+  #             - key: group
+  #               operator: In
+  #               values:
+  #                 - operation
+
+# dex:
+  # resources:
+  #  limits:
+  #    cpu: 50m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 50m
+  #    memory: 128Mi
+
+  # metrics:
+  #   enabled: true
+  #   serviceMonitor:
+  #     enabled: false
+  #     additionalLabels:
+  #       release: prometheus-operator
+
+  # tolerations:
+  #   - key: group
+  #     operator: Equal
+  #     value: operation
+  #     effect: NoSchedule
+
+  # affinity:
+  #   nodeAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #       nodeSelectorTerms:
+  #         - matchExpressions:
+  #             - key: group
+  #               operator: In
+  #               values:
+  #                 - operation
+
+# redis:
+#   enabled: true
+
+  # resources:
+  #  limits:
+  #    cpu: 200m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 200m
+  #    memory: 128Mi
+
+  # tolerations:
+  #   - key: group
+  #     operator: Equal
+  #     value: operation
+  #     effect: NoSchedule
+
+  # affinity:
+  #   nodeAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #       nodeSelectorTerms:
+  #         - matchExpressions:
+  #             - key: group
+  #               operator: In
+  #               values:
+  #                 - operation
+
+# redis-ha:
+#   enabled: false

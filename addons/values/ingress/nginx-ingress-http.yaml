@@ -1,0 +1,77 @@
+nameOverride: nginx-ingress-http
+
+controller:
+  # kind: DaemonSet
+
+  # replicaCount: 2
+
+  config:
+    use-forwarded-headers: "true"
+    compute-full-forwarded-for: "true"
+    # whitelist-source-range: "10.0.0.0/8" # internal only
+    ssl-redirect: "false" # we use `special` port to control ssl redirection
+    server-snippet: |
+      listen 8000;
+      if ( $server_port = 80 ) {
+         return 308 https://$host$request_uri;
+      }
+
+  containerPort:
+    http: 80
+    https: 443
+    special: 8000
+
+  service:
+    type: NodePort
+
+    nodePorts:
+      http: 30080
+      https: 30443
+
+    targetPorts:
+      http: http
+      https: special # http
+
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 11
+    targetCPUUtilizationPercentage: 60
+    targetMemoryUtilizationPercentage: 60
+
+  stats:
+    enabled: true
+
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: false
+      additionalLabels:
+        release: prometheus-operator
+
+  tolerations:
+    - key: group
+      operator: Equal
+      effect: NoSchedule
+      value: ingress
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: group
+                operator: In
+                values:
+                  - ingress
+
+defaultBackend:
+  enabled: true
