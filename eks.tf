@@ -67,6 +67,10 @@ module "eks" {
   }
 }
 
+output "eks_id" {
+  value = module.eks.cluster_id
+}
+
 
 # resource "helm_release" "argocd" {
 #   name             = "argocd"
