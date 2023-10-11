@@ -17,10 +17,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        job: [1, 2, 3]
+        job: [1, 2, 3, 4, 5, 6]
     runs-on: ${{ inputs.arc_runner_set_name }}
     steps:
       - name: simple-sleep
         run: |
-          eccho "Heelo from: "${{ matrix.version }}
+          echo "Hello from: "${{ matrix.version }}
           sleep ${{ inputs.delay }}
